@@ -9,15 +9,12 @@ import {
   Image,
   TextInput,
   ActivityIndicator,
-  SafeAreaView,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { Entypo } from "@expo/vector-icons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useNavigation } from "@react-navigation/native"; // import useNavigation
-import Icon from "react-native-vector-icons/FontAwesome";
 
 // Halaman Utama
 const HomeScreen = ({ navigation }) => {
@@ -74,7 +71,6 @@ const HomeScreen = ({ navigation }) => {
     </ImageBackground>
   );
 };
-
 // Halaman Detail
 const DetailScreen = ({ navigation }) => {
   const [selectedFilter, setSelectedFilter] = useState("semua");
@@ -287,13 +283,7 @@ const DetailScreen = ({ navigation }) => {
 
   return (
     <View style={styles.detailContainer}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()} // Tombol kembali akan memanggil navigation.goBack()
-      >
-        <Icon name="chevron-left" size={20} color="#fff" />
-      </TouchableOpacity>
-      <Text style={styles.detailText}>LocalGoes</Text>
+      <Text style={styles.detailText}>LocalGo</Text>
       <TextInput
         style={styles.searchBox}
         placeholder="Telusuri Gunung"
@@ -329,15 +319,9 @@ const DetailScreen = ({ navigation }) => {
 };
 
 // Halaman About
-const AboutScreen = ({ navigation }) => {
+const AboutScreen = () => {
   return (
     <View style={styles.aboutContainer}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()} // Tombol kembali akan memanggil navigation.goBack()
-      >
-        <Icon name="chevron-left" size={20} color="#fff" />
-      </TouchableOpacity>
       <Text style={styles.aboutTitle}>Tentang Aplikasi</Text>
       <Text style={styles.aboutText}>
         MountAGoes adalah aplikasi eksplorasi gunung di Indonesia yang
@@ -347,25 +331,22 @@ const AboutScreen = ({ navigation }) => {
   );
 };
 
-const EmptyScreen = ({ route, navigation }) => {
+const handleImagePress = (item) => {
+  navigation.navigate("Empty", {
+    image: item.uri,
+    title: item.title,
+    description: item.description,
+  });
+};
+
+const EmptyScreen = ({ route }) => {
   const { image, title, description } = route.params;
 
   return (
-    <View style={styles.container}>
-      {/* Tombol Back */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()} // Tombol kembali akan memanggil navigation.goBack()
-      >
-        <Icon name="chevron-left" size={20} color="#fff" />
-      </TouchableOpacity>
-
-      {/* Konten lainnya */}
-      <View style={styles.detailContainer}>
-        <Image source={{ uri: image }} style={styles.detailImage} />
-        <Text style={styles.detailTitle}>{title}</Text>
-        <Text style={styles.detailDescription}>{description}</Text>
-      </View>
+    <View style={styles.detailContainer}>
+      <Image source={{ uri: image }} style={styles.detailImage} />
+      <Text style={styles.detailTitle}>{title}</Text>
+      <Text style={styles.detailDescription}>{description}</Text>
     </View>
   );
 };
@@ -382,7 +363,8 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Detail" component={DetailScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
-        <Stack.Screen name="Empty" component={EmptyScreen} />
+        <Stack.Screen name="Empty" component={EmptyScreen} />{" "}
+        {/* Tambahkan screen baru */}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -470,16 +452,13 @@ const styles = StyleSheet.create({
   detailContainer: {
     flex: 1,
     backgroundColor: "#f2f2f2",
-    paddingTop: 60, // Adds space from the top
-    paddingHorizontal: 20, // Adds space on the sides
+    paddingTop: 20,
   },
-
   detailText: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
-    marginTop: 70, // Adds margin above the "LocalGo" text
   },
   searchBox: {
     width: "80%",
@@ -536,47 +515,5 @@ const styles = StyleSheet.create({
     color: "#555",
     textAlign: "center",
     lineHeight: 24,
-  },
-
-  // EmptyScreen Styles
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f4f4f4",
-    padding: 20,
-  },
-  backButton: {
-    position: "absolute",
-    top: 40,
-    left: 20,
-    backgroundColor: "#ff5c5c", // Warna background tombol
-    padding: 10,
-    borderRadius: 50,
-    elevation: 5,
-    zIndex: 1,
-  },
-  detailContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  detailImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  detailTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  detailDescription: {
-    fontSize: 16,
-    color: "#555",
-    textAlign: "center",
   },
 });
